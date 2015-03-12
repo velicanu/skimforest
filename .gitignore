@@ -11,3 +11,10 @@
 *.lai
 *.la
 *.a
+
+# Temporary files
+HiForestAnalysis/
+_skimforest_*_proddir/
+skimforest.condor
+skimforest.exe
+runskimforest.sh
