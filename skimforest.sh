@@ -8,6 +8,7 @@ fi
 
 now="_${NAME}_$(date +"%Y_%m_%d__%H_%M_%S")_proddir"
 mkdir $now
+mkdir -p $2
 
 g++ ${NAME}.C $(root-config --cflags --libs) -std=c++11 -Werror -Wall -O2 -o "${NAME}.exe"
 
