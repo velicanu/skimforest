@@ -14,18 +14,20 @@ void skimforest(string filename, string outfilename, string myjet, int minjetpt)
     if(!c->skim.pPAcollisionEventSelectionPA ) continue;
     if(!c->skim.pHBHENoiseFilter ) continue;
     
-    float cmetashift = 0.0;
-    if( c->hlt.Run >= 210498 && c->hlt.Run < 211313 ) cmetashift = 0.4654;  //pPb range
-    if( c->hlt.Run >= 211313 && c->hlt.Run <= 211631 ) cmetashift = -0.4654; //Pbp range
+    // float cmetashift = 0.0;
+    // if( c->hlt.Run >= 210498 && c->hlt.Run < 211313 ) cmetashift = 0.4654;  //pPb range
+    // if( c->hlt.Run >= 211313 && c->hlt.Run <= 211631 ) cmetashift = -0.4654; //Pbp range
     bool writeev = false;
-    for(int i = 0 ; i < c->myjet.nref ; ++i)
-    {
-      if(c->myjet.jtpt[i] < minjetpt) continue;
-      if(fabs(c->myjet.jteta[i] + cmetashift) > 1.5) continue;
-      writeev = true;
-      filtered++;
-      break;
-    }
+    // if( c->hlt.HLT_PAJet40_NoJetID_v1 ) writeev = true;
+    if( c->hlt.HLT_PAJet80_NoJetID_v1 ) writeev = true;
+    // for(int i = 0 ; i < c->myjet.nref ; ++i)
+    // {
+      // if(c->myjet.jtpt[i] < minjetpt) continue;
+      // if(fabs(c->myjet.jteta[i] + cmetashift) > 1.5) continue;
+      // writeev = true;
+      // filtered++;
+      // break;
+    // }
     if(writeev) c->FillOutput();
   }
   delete c;
