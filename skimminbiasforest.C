@@ -6,12 +6,14 @@ void skimminbiasforest(string filename, string outfilename)
   TFile *fout = new TFile(outfilename.data(),"recreate");
   fout->mkdir("hiEvtAnalyzer");
   fout->mkdir("akPu4CaloJetAnalyzer");
+  fout->mkdir("akPu3PFJetAnalyzer");
   fout->mkdir("anaTrack");
   fout->mkdir("skimanalysis");
 
   TFile * fin       = TFile::Open(filename.data());
   TTree * eventtree = (TTree*) fin->Get("hiEvtAnalyzer/HiTree");
   TTree * jettree   = (TTree*) fin->Get("akPu4CaloJetAnalyzer/t");
+  TTree * jettree_ak3pupf   = (TTree*) fin->Get("akPu3PFJetAnalyzer/t");
   TTree * skimtree  = (TTree*) fin->Get("skimanalysis/HltTree");
   TTree * tracktree = (TTree*) fin->Get("anaTrack/trackTree");
 
@@ -56,6 +58,58 @@ void skimminbiasforest(string filename, string outfilename)
   jettree_out->Branch("jtpt", jtpt, "jtpt[nref]/F");
   jettree_out->Branch("jteta", jteta, "jteta[nref]/F");
   jettree_out->Branch("jtphi", jtphi, "jtphi[nref]/F");
+  fout->cd();
+  // End jet tree
+
+  // Begin ak3pf jet tree
+  Int_t           nref_ak3pupf;
+  Float_t         * rawpt_ak3pupf = (Float_t*) malloc(sizeof(Float_t)*300);   //[nref]
+  Float_t         * jtpt_ak3pupf = (Float_t*) malloc(sizeof(Float_t)*300);   //[nref]
+  Float_t         * jteta_ak3pupf = (Float_t*) malloc(sizeof(Float_t)*300);   //[nref]
+  Float_t         * jtphi_ak3pupf = (Float_t*) malloc(sizeof(Float_t)*300);   //[nref]
+  Float_t         * neutralSum_ak3pupf = (Float_t*) malloc(sizeof(Float_t)*300);   //[nref]
+  Float_t         * chargedSum_ak3pupf = (Float_t*) malloc(sizeof(Float_t)*300);   //[nref]
+  Int_t         * chargedN_ak3pupf = (Int_t*) malloc(sizeof(Float_t)*300);   //[nref]
+  Int_t         * photonN_ak3pupf = (Int_t*) malloc(sizeof(Float_t)*300);   //[nref]
+  Int_t         * neutralN_ak3pupf = (Int_t*) malloc(sizeof(Float_t)*300);   //[nref]
+  Int_t         * eN_ak3pupf = (Int_t*) malloc(sizeof(Float_t)*300);   //[nref]
+  Int_t         * muN_ak3pupf = (Int_t*) malloc(sizeof(Float_t)*300);   //[nref]
+  Float_t         * chargedMax_ak3pupf = (Float_t*) malloc(sizeof(Float_t)*300);   //[nref]
+  Float_t         * photonSum_ak3pupf = (Float_t*) malloc(sizeof(Float_t)*300);   //[nref]
+  Float_t         * eSum_ak3pupf = (Float_t*) malloc(sizeof(Float_t)*300);   //[nref]
+  jettree_ak3pupf->SetBranchAddress("nref", &nref_ak3pupf);
+  jettree_ak3pupf->SetBranchAddress("rawpt", rawpt_ak3pupf);
+  jettree_ak3pupf->SetBranchAddress("jtpt", jtpt_ak3pupf);
+  jettree_ak3pupf->SetBranchAddress("jteta", jteta_ak3pupf);
+  jettree_ak3pupf->SetBranchAddress("jtphi", jtphi_ak3pupf);
+  jettree_ak3pupf->SetBranchAddress("neutralSum", neutralSum_ak3pupf);
+  jettree_ak3pupf->SetBranchAddress("chargedSum", chargedSum_ak3pupf);
+  jettree_ak3pupf->SetBranchAddress("chargedN", chargedN_ak3pupf);
+  jettree_ak3pupf->SetBranchAddress("photonN", photonN_ak3pupf);
+  jettree_ak3pupf->SetBranchAddress("neutralN", neutralN_ak3pupf);
+  jettree_ak3pupf->SetBranchAddress("eN", eN_ak3pupf);
+  jettree_ak3pupf->SetBranchAddress("muN", muN_ak3pupf);
+  jettree_ak3pupf->SetBranchAddress("chargedMax", chargedMax_ak3pupf);
+  jettree_ak3pupf->SetBranchAddress("photonSum", photonSum_ak3pupf);
+  jettree_ak3pupf->SetBranchAddress("eSum", eSum_ak3pupf);
+
+  fout->cd("akPu3PFJetAnalyzer");
+  TTree * jettree_ak3pupf_out = new TTree("t","akPu3PFJetAnalyzer");
+  jettree_ak3pupf_out->Branch("nref", &nref_ak3pupf, "nref/I");
+  jettree_ak3pupf_out->Branch("rawpt", rawpt_ak3pupf, "rawpt[nref]/F");
+  jettree_ak3pupf_out->Branch("jtpt", jtpt_ak3pupf, "jtpt[nref]/F");
+  jettree_ak3pupf_out->Branch("jteta", jteta_ak3pupf, "jteta[nref]/F");
+  jettree_ak3pupf_out->Branch("jtphi", jtphi_ak3pupf, "jtphi[nref]/F");
+  jettree_ak3pupf_out->Branch("neutralSum", neutralSum_ak3pupf, "neutralSum[nref]/F");
+  jettree_ak3pupf_out->Branch("chargedSum", chargedSum_ak3pupf, "chargedSum[nref]/F");
+  jettree_ak3pupf_out->Branch("chargedN", chargedN_ak3pupf, "chargedN[nref]/I");
+  jettree_ak3pupf_out->Branch("photonN", photonN_ak3pupf, "photonN[nref]/I");
+  jettree_ak3pupf_out->Branch("neutralN", neutralN_ak3pupf, "neutralN[nref]/I");
+  jettree_ak3pupf_out->Branch("eN", eN_ak3pupf, "eN[nref]/I");
+  jettree_ak3pupf_out->Branch("muN", muN_ak3pupf, "muN[nref]/I");
+  jettree_ak3pupf_out->Branch("chargedMax", chargedMax_ak3pupf, "chargedMax[nref]/F");
+  jettree_ak3pupf_out->Branch("photonSum", photonSum_ak3pupf, "photonSum[nref]/F");
+  jettree_ak3pupf_out->Branch("eSum", eSum_ak3pupf, "eSum[nref]/F");
   fout->cd();
   // End jet tree
 
@@ -148,12 +202,14 @@ void skimminbiasforest(string filename, string outfilename)
   tracktree_out->Branch("pfEcal", pfEcal_, "pfEcal[nTrk]/F");
   fout->cd();
   // End track tree
-  int nentries = eventtree->GetEntries();
+  int nentries = 10000;
+  // int nentries = eventtree->GetEntries();
   for (int i = 0; i < nentries; ++i)
   {
     if(i%1000 == 0) cout<<i<<"/"<<nentries<<endl;
     eventtree->GetEntry(i);
     jettree->GetEntry(i);
+    jettree_ak3pupf->GetEntry(i);
     skimtree->GetEntry(i);
     tracktree->GetEntry(i);
     nTrk_ = 0;
@@ -189,6 +245,7 @@ void skimminbiasforest(string filename, string outfilename)
     }
     eventtree_out->Fill();
     jettree_out->Fill();
+    jettree_ak3pupf_out->Fill();
     skimtree_out->Fill();
     tracktree_out->Fill();
   }
